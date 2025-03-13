@@ -1,21 +1,22 @@
 package com.example.demo.services;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
 
 @Service
-public class CsvService implements ICsvService {
+@AllArgsConstructor
+@NoArgsConstructor
+public class CsvService implements ConversionService {
 
-
-    String file;
+    String file = "";
     BufferedReader reader;
-    String line;
+    String line = "";
 
-    public CsvService() {
-        this.file = "src/main/resources/csvFiles/csv_demo.csv";
-        this.reader = null;
-        this.line = "";
+    public void setFile(String file) {
+        this.file = file;
     }
 
     public void readFile() throws IOException {
