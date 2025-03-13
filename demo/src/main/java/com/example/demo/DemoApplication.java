@@ -1,7 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.services.CsvService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.services.FileService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,11 +14,8 @@ public class DemoApplication {
 
 		SpringApplication.run(DemoApplication.class, args);
 
-		CsvService csvService;
-
-		csvService = new CsvService();
-		csvService.readCsv();
-
+		FileService fileConv = new FileService("src/main/resources/csvFiles/csv_demo.xslx");
+		fileConv.execute();
 
 	}
 
