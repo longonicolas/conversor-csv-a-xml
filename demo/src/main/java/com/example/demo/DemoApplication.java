@@ -18,14 +18,14 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 
 
-		//FileService file1 = new FileService("src/main/resources/csvFiles/csv_demo.csv");
-		//file1.execute();
+		FileService file1 = new FileService("src/main/resources/csvFiles/worksheet1.csv");
+		file1.execute();
 
-//		FileService file2 = new FileService("src/main/resources/csvFiles/worksheet.xlsx");
-//		file2.execute();
+		//FileService file2 = new FileService("src/main/resources/csvFiles/worksheet.xlsx");
+		//file2.execute();
 
-		ToXmlService toXml = new ToXmlService();
-		toXml.createDocument();
+		//ToXmlService toXml = new ToXmlService();
+		//toXml.createDocument();
 
 
 	}
