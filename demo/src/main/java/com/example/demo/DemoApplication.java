@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.services.CsvService;
+import com.example.demo.services.FileService;
 import com.example.demo.services.XlsxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -15,15 +16,12 @@ public class DemoApplication {
 
 		SpringApplication.run(DemoApplication.class, args);
 
-		/*
-		CsvService csvService;
-		csvService = new CsvService();
-		csvService.readFile();
-		*/
 
-		XlsxService service;
-		service = new XlsxService();
-		service.readFile();
+		//FileService file1 = new FileService("src/main/resources/csvFiles/csv_demo.csv");
+		//file1.execute();
+
+		FileService file2 = new FileService("src/main/resources/csvFiles/worksheet.xlsx");
+		file2.execute();
 
 
 	}

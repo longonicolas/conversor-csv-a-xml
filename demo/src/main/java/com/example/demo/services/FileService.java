@@ -21,7 +21,7 @@ public class FileService {
         if(Objects.equals(getFileExtension(), "csv")){
             this.service = new CsvService();
         }
-        if(Objects.equals(getFileExtension(), "xslx")){
+        if(Objects.equals(getFileExtension(), "xlsx")){
             this.service = new XlsxService();
         }
     }

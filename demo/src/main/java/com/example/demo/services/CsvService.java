@@ -2,11 +2,9 @@ package com.example.demo.services;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.io.*;
 
-@Service
 @AllArgsConstructor
 @NoArgsConstructor
 public class CsvService implements ConversionService {
@@ -34,9 +32,7 @@ public class CsvService implements ConversionService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        finally {
-            reader.close();
-        }
+
     }
 
 }

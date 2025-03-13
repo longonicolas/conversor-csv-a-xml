@@ -8,14 +8,21 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import java.io.FileInputStream;
 
 
-public class XlsxService implements IXslxService{
+public class XlsxService implements ConversionService{
+
+    String file;
 
     public XlsxService() {
         super();
     }
 
+    @Override
+    public void setFile(String file) {
+        this.file = file;
+    }
+
     public void readFile(){
-        readXlsxFile("src/main/resources/csvFiles/worksheet.xlsx");
+        readXlsxFile(file);
     }
 
     private void readXlsxFile(String file) {
@@ -45,6 +52,7 @@ public class XlsxService implements IXslxService{
                     }
                 }
                 System.out.println(celda);
+
             }
         }
         catch (Exception e) {
