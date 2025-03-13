@@ -18,7 +18,7 @@ public class CsvService implements ICsvService {
         this.line = "";
     }
 
-    public void readCsv() throws IOException {
+    public void readFile() throws IOException {
         System.out.println("Ruta absoluta del archivo: " + new File(file).getAbsolutePath());
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;

@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.services.CsvService;
+import com.example.demo.services.XlsxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,10 +15,15 @@ public class DemoApplication {
 
 		SpringApplication.run(DemoApplication.class, args);
 
+		/*
 		CsvService csvService;
-
 		csvService = new CsvService();
-		csvService.readCsv();
+		csvService.readFile();
+		*/
+
+		XlsxService service;
+		service = new XlsxService();
+		service.readFile();
 
 
 	}
