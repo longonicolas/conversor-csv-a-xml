@@ -19,10 +19,10 @@ public class FileService {
 
     public void setService(){
         if(Objects.equals(getFileExtension(), "csv")){
-            this.service = new CsvService();
+           // this.service = new CsvService();
         }
         if(Objects.equals(getFileExtension(), "xlsx")){
-            this.service = new XlsxService();
+            //this.service = new XlsxService();
         }
     }
 
