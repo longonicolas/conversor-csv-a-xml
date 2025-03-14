@@ -1,6 +1,6 @@
 package com.example.demo.services;
 
-import com.example.demo.dtos.RowDto;
+import com.example.demo.entities.Row;
 import org.w3c.dom.*;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -12,9 +12,11 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.List;
 
+
+
 public class ToXmlService {
 
-    public void createDocument(List<RowDto> rows) {
+    public void createDocument(List<Row> rows) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
@@ -25,7 +27,7 @@ public class ToXmlService {
             documento.appendChild(rootElement);
 
             // Iterar sobre la lista de Rows y agregar cada uno al XML
-            for (RowDto row : rows) {
+            for (Row row : rows) {
                 Element rowElement = documento.createElement("row");
 
                 // Crear y agregar elementos
@@ -34,7 +36,7 @@ public class ToXmlService {
                 rowElement.appendChild(createElement(documento, "Script", row.getScript()));
                 rowElement.appendChild(createElement(documento, "Prueba", row.getPrueba()));
                 rowElement.appendChild(createElement(documento, "Resultado", row.getResultado()));
-                rowElement.appendChild(createElement(documento, "FechaHora", row.getFechaHora()));
+                rowElement.appendChild(createElement(documento, "FechaHora", row.getFormato()));
                 rowElement.appendChild(createElement(documento, "Ambiente", row.getAmbiente()));
                 rowElement.appendChild(createElement(documento, "Evidencia", row.getEvidencia()));
 

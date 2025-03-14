@@ -1,12 +1,11 @@
 package com.example.demo.steps;
 
-import com.example.demo.dtos.RowDto;
+import com.example.demo.entities.Row;
 import com.example.demo.services.ToXmlService;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -16,13 +15,13 @@ public class itemConvertStep implements Tasklet {
 
         ToXmlService toXmlService = new ToXmlService();
 
-        List<RowDto> personList = (List<RowDto>) chunkContext.getStepContext()
+        List<Row> rowList = (List<Row>) chunkContext.getStepContext()
                 .getStepExecution()
                 .getJobExecution()
                 .getExecutionContext()
                 .get("RowList");
 
-        toXmlService.createDocument(personList);
+        toXmlService.createDocument(rowList);
 
         return RepeatStatus.FINISHED;
     }
