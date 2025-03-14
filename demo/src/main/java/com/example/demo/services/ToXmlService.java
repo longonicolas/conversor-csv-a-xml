@@ -1,75 +1,66 @@
 package com.example.demo.services;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.DocumentBuilderFactory;
+import com.example.demo.dtos.RowDto;
+import org.w3c.dom.*;
+
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import org.w3c.dom.DOMImplementation;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Text;
-
 import java.io.File;
+import java.util.List;
 
 public class ToXmlService {
 
-    public void createDocument(){
+    public void createDocument(List<RowDto> rows) {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
-            DOMImplementation implementation = builder.getDOMImplementation();
+            Document documento = builder.newDocument();
 
-            Document documento = implementation.createDocument(null, "xml", null);
-            documento.setXmlVersion("1.0");
+            // Nodo raíz
+            Element rootElement = documento.createElement("rows");
+            documento.appendChild(rootElement);
 
-            Element files = documento.createElement("files");
-            Element file1 = documento.createElement("file");
+            // Iterar sobre la lista de Rows y agregar cada uno al XML
+            for (RowDto row : rows) {
+                Element rowElement = documento.createElement("row");
 
-            Element test = documento.createElement("test");
-            Text resultt = documento.createTextNode("pass");
-            test.appendChild(resultt);
-            file1.appendChild(test);
+                // Crear y agregar elementos
+                rowElement.appendChild(createElement(documento, "Funcion", row.getFuncion()));
+                rowElement.appendChild(createElement(documento, "Tipo", row.getTipo()));
+                rowElement.appendChild(createElement(documento, "Script", row.getScript()));
+                rowElement.appendChild(createElement(documento, "Prueba", row.getPrueba()));
+                rowElement.appendChild(createElement(documento, "Resultado", row.getResultado()));
+                rowElement.appendChild(createElement(documento, "FechaHora", row.getFechaHora()));
+                rowElement.appendChild(createElement(documento, "Ambiente", row.getAmbiente()));
+                rowElement.appendChild(createElement(documento, "Evidencia", row.getEvidencia()));
 
-            Element time = documento.createElement("time");
-            Text textTime = documento.createTextNode("04.02.2025 17:03");
-            time.appendChild(textTime);
-            file1.appendChild(time);
+                // Agregar la fila al nodo raíz
+                rootElement.appendChild(rowElement);
+            }
 
-            Element tipo1 = documento.createElement("tipo");
-            Text textTipo1 = documento.createTextNode("Caso 1");
-            tipo1.appendChild(textTipo1);
-            file1.appendChild(tipo1);
-
-            files.appendChild(file1);
-
-            Element file2 = documento.createElement("file");
-
-            Element tipo2 = documento.createElement("tipo");
-            Text textTipo2 = documento.createTextNode("Caso 2");
-            tipo2.appendChild(textTipo2);
-            file2.appendChild(tipo2);
-
-            Element time2 = documento.createElement("time");
-            Text textTime2 = documento.createTextNode("08.02.2025 17:03");
-            time2.appendChild(textTime2);
-            file2.appendChild(time2);
-
-            files.appendChild(file2);
-
-
-            documento.getDocumentElement().appendChild(files);
+            // Guardar el documento XML en un archivo
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
 
             Source source = new DOMSource(documento);
-            Result result = new StreamResult(new File("newxml8.xml"));
-
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            Result result = new StreamResult(new File("rows.xml"));
             transformer.transform(source, result);
+
+            System.out.println("Archivo XML generado con éxito: rows.xml");
+
         } catch (ParserConfigurationException | TransformerException e) {
             e.printStackTrace();
         }
     }
 
+    private Element createElement(Document doc, String tagName, String value) {
+        Element element = doc.createElement(tagName);
+        element.appendChild(doc.createTextNode(value));
+        return element;
+    }
 }
