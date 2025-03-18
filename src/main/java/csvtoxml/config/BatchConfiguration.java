@@ -39,7 +39,7 @@ public class BatchConfiguration {
     @Bean
     public FlatFileItemReader<Row> reader() {
         FlatFileItemReader<Row> reader = new FlatFileItemReader<>();
-        reader.setResource(new FileSystemResource("src/main/resources/worksheet1.csv"));
+        //reader.setResource(new FileSystemResource("src/main/resources/worksheet1.csv"));
         reader.setName("csvReader");
         reader.setLinesToSkip(1);
         reader.setLineMapper(lineMapper());
