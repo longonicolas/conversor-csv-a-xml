@@ -8,6 +8,7 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,20 +33,30 @@ public class JobController {
     @Autowired
     private FlatFileItemReader<Row> reader;
 
+    @Value("${file.upload-dir}") // DIRECTORIO CONFIGURADO EN application.properties
+    private String uploadDir;
+
     @PostMapping("/importRows")
     public ResponseEntity<String> importCsvToDB(@RequestParam("file") MultipartFile file) throws IOException {
 
+        /*
         String fixedPath = "C:/Users/nicolas.longo/Desktop/csv-a-xml-accenture-bbva/src/main/resources" + file.getOriginalFilename();
         File fixedFile = new File(fixedPath);
-        file.transferTo(fixedFile);
+        file.transferTo(fixedFile);*/
 
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("El archivo es requerido y no puede estar vacío.");
         }
 
+        File directory = new File(uploadDir);
+        if (!directory.exists()) {
+            directory.mkdirs();
+        }
+
+        File fixedFile = new File(uploadDir + File.separator + file.getOriginalFilename());
+        file.transferTo(fixedFile);
 
         reader.setResource(new FileSystemResource(fixedFile));
-
 
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("startAt", System.currentTimeMillis())
