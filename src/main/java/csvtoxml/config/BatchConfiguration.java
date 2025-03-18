@@ -84,6 +84,8 @@ public class BatchConfiguration {
                 .build();
     }
 
+
+
     @Bean
     public Step step1(JobRepository jobRepository,PlatformTransactionManager transactionManager)  {
         return new StepBuilder("csv-step",jobRepository).<Row, Row>chunk(10,transactionManager)

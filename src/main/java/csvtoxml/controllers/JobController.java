@@ -1,6 +1,9 @@
 package csvtoxml.controllers;
 
 import csvtoxml.entities.Row;
+import csvtoxml.repositories.RowRepository;
+import csvtoxml.services.GenerateRowListService;
+import csvtoxml.services.ToXmlService;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -8,23 +11,35 @@ import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteExcep
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
 
 @RestController
 @RequestMapping("/jobs")
 public class JobController {
 
+    @Value("${app.base-dir}")
+    private String baseDir;
+
     @Autowired
     private JobLauncher jobLauncher;
+
+    @Autowired
+    private GenerateRowListService generateRowList;
+
+    @Autowired
+    private RowRepository rowRepository;
+
+    @Autowired
+    private ToXmlService toXmlService;
 
     @Autowired
     private Job job;
@@ -35,7 +50,7 @@ public class JobController {
     @PostMapping("/importRows")
     public ResponseEntity<String> importCsvToDB(@RequestParam("file") MultipartFile file) throws IOException {
 
-        String fixedPath = "C:/Users/nicolas.longo/Desktop/csv-a-xml-accenture-bbva/src/main/resources" + file.getOriginalFilename();
+        String fixedPath = Paths.get(baseDir, file.getOriginalFilename()).toString();
         File fixedFile = new File(fixedPath);
         file.transferTo(fixedFile);
 
@@ -60,4 +75,10 @@ public class JobController {
         }
     }
 
+    @GetMapping("/getRows")
+    public ResponseEntity<List<Row>> getAllRows() {
+        generateRowList = new GenerateRowListService(rowRepository,toXmlService);
+        List<Row> rows = generateRowList.getAllRows();
+        return ResponseEntity.ok(rows);
+    }
 }
