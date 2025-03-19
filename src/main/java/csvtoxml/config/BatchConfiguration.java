@@ -4,36 +4,28 @@ package csvtoxml.config;
 import javax.sql.DataSource;
 
 import csvtoxml.entities.Row;
-import csvtoxml.repositories.RowRepository;
-import jakarta.persistence.EntityManagerFactory;
+
 import org.springframework.batch.core.*;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.data.RepositoryItemWriter;
-import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.batch.item.xml.StaxEventItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 public class BatchConfiguration {
-
-    @Autowired
-    private RowRepository rowRepository;
 
 
     @Bean
@@ -69,10 +61,17 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public RepositoryItemWriter<Row> writer(){
-        RepositoryItemWriter<Row> writer = new RepositoryItemWriter<>();
-        writer.setRepository(rowRepository);
-        writer.setMethodName("save");
+    public StaxEventItemWriter<Row> xmlWriter() {
+        StaxEventItemWriter<Row> writer = new StaxEventItemWriter<>();
+        writer.setResource(new FileSystemResource("output.xml"));
+
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        marshaller.setClassesToBeBound(Row.class);
+
+        writer.setMarshaller(marshaller);
+        writer.setRootTagName("rows");
+        writer.setOverwriteOutput(true);
+
         return writer;
     }
 
@@ -89,7 +88,7 @@ public class BatchConfiguration {
         return new StepBuilder("csv-step",jobRepository).<Row, Row>chunk(10,transactionManager)
                 .reader(reader())
                 .processor(processor())
-                .writer(writer())
+                .writer(xmlWriter())
                 .taskExecutor(taskExecutor())
                 .build();
     }
