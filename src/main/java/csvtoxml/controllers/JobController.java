@@ -23,49 +23,28 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/jobs")
 public class JobController {
-
+/*
     @Autowired
     private JobLauncher jobLauncher;
 
     @Autowired
     private Job job;
 
-    @Autowired
-    private FlatFileItemReader<Row> reader;
 
-    /*
-    @Value("${file.upload-dir}") // DIRECTORIO CONFIGURADO EN application.properties
-    private String uploadDir;*/
+
+   // @Value("${file.upload-dir}") // DIRECTORIO CONFIGURADO EN application.properties
+    //private String uploadDir;
 
     @PostMapping("/importRows")
-    public ResponseEntity<String> importCsvToDB(/*@RequestParam("file") MultipartFile file*/) throws IOException {
-
-        /*
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("El archivo es requerido y no puede estar vacío.");
-        }
-
-
-        File directory = new File(uploadDir);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
-
-        File fixedFile = new File(uploadDir + File.separator + file.getOriginalFilename());
-        file.transferTo(fixedFile);
-
-        reader.setResource(new FileSystemResource(fixedFile));*/
+    public ResponseEntity<String> importCsvToDB() throws IOException {
 
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("startAt", System.currentTimeMillis())
-                //.addString("filePath", fixedFile.getAbsolutePath())
                 .toJobParameters();
 
         try {
           JobExecution run = jobLauncher.run(job, jobParameters);
-            for (Throwable t : run.getAllFailureExceptions()) {
-                t.printStackTrace();
-            }
+
             return ResponseEntity.ok(run.getStatus().toString());
 
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException |
@@ -73,5 +52,5 @@ public class JobController {
             throw new RuntimeException(e);
         }
     }
-
+*/
 }
