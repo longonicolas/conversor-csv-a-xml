@@ -20,14 +20,21 @@ import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.xml.StaxEventItemWriter;
+import org.springframework.batch.item.xml.builder.StaxEventItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.WritableResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.transaction.PlatformTransactionManager;
+
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class BatchConfiguration {
@@ -76,6 +83,8 @@ public class BatchConfiguration {
         return writer;
     }
 
+
+
     @Bean
     public Job runJob(JobRepository jobRepository,PlatformTransactionManager transactionManager){
         return new JobBuilder("importRows",jobRepository)
@@ -103,6 +112,37 @@ public class BatchConfiguration {
         return asyncTaskExecutor;
     }
 
+
+
+
+
+
+    @Bean
+    public XStreamMarshaller tradeMarshaller() {
+        Map<String, Class<?>> aliases = new HashMap<>();
+        aliases.put("trade", Row.class);
+        aliases.put("price", BigDecimal.class);
+        aliases.put("isin", String.class);
+        aliases.put("customer", String.class);
+        aliases.put("quantity", Long.class);
+
+        XStreamMarshaller marshaller = new XStreamMarshaller();
+        marshaller.setAliases(aliases);
+        return marshaller;
+    }
+
+
+    @Bean
+    public StaxEventItemWriter itemWriter(WritableResource outputResource) {
+        return new StaxEventItemWriterBuilder<Row>()
+                .name("tradesWriter")
+                .marshaller(tradeMarshaller())
+                .resource(outputResource)
+                .rootTagName("row")
+                .overwriteOutput(true)
+                .build();
+
+    }
 
 
 }
