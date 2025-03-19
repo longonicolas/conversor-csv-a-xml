@@ -33,20 +33,18 @@ public class JobController {
     @Autowired
     private FlatFileItemReader<Row> reader;
 
+    /*
     @Value("${file.upload-dir}") // DIRECTORIO CONFIGURADO EN application.properties
-    private String uploadDir;
+    private String uploadDir;*/
 
     @PostMapping("/importRows")
-    public ResponseEntity<String> importCsvToDB(@RequestParam("file") MultipartFile file) throws IOException {
+    public ResponseEntity<String> importCsvToDB(/*@RequestParam("file") MultipartFile file*/) throws IOException {
 
         /*
-        String fixedPath = "C:/Users/nicolas.longo/Desktop/csv-a-xml-accenture-bbva/src/main/resources" + file.getOriginalFilename();
-        File fixedFile = new File(fixedPath);
-        file.transferTo(fixedFile);*/
-
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("El archivo es requerido y no puede estar vacío.");
         }
+
 
         File directory = new File(uploadDir);
         if (!directory.exists()) {
@@ -56,15 +54,20 @@ public class JobController {
         File fixedFile = new File(uploadDir + File.separator + file.getOriginalFilename());
         file.transferTo(fixedFile);
 
-        reader.setResource(new FileSystemResource(fixedFile));
+        reader.setResource(new FileSystemResource(fixedFile));*/
 
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("startAt", System.currentTimeMillis())
+                //.addString("filePath", fixedFile.getAbsolutePath())
                 .toJobParameters();
 
         try {
           JobExecution run = jobLauncher.run(job, jobParameters);
+            for (Throwable t : run.getAllFailureExceptions()) {
+                t.printStackTrace();
+            }
             return ResponseEntity.ok(run.getStatus().toString());
+
         } catch (JobExecutionAlreadyRunningException | JobRestartException | JobInstanceAlreadyCompleteException |
                  JobParametersInvalidException e) {
             throw new RuntimeException(e);

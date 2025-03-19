@@ -5,69 +5,104 @@ package csvtoxml.entities;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-
 @XmlRootElement(name = "row")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Data
-@NoArgsConstructor
 public class Row {
 
+    @XmlElement(name = "funcion")
     private String funcion;
 
+    @XmlElement(name = "tipo")
     private String tipo;
 
+    @XmlElement(name = "script")
     private String script;
 
+    @XmlElement(name = "prueba")
     private String prueba;
 
+    @XmlElement(name = "resultado")
     private String resultado;
 
+    @XmlElement(name = "formato")
     private String formato;
 
+    @XmlElement(name = "ambiente")
     private String ambiente;
 
+    @XmlElement(name = "evidencia")
     private String evidencia;
 
+    public Row() {
+    }
 
-    @XmlElement
     public String getFuncion() {
         return funcion;
     }
 
-    @XmlElement
+    public void setFuncion(String funcion) {
+        this.funcion = funcion;
+    }
+
     public String getTipo() {
         return tipo;
     }
 
-    @XmlElement
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
     public String getScript() {
         return script;
     }
 
-    @XmlElement
+    public void setScript(String script) {
+        this.script = script;
+    }
+
     public String getPrueba() {
         return prueba;
     }
 
-    @XmlElement
+    public void setPrueba(String prueba) {
+        this.prueba = prueba;
+    }
+
     public String getResultado() {
         return resultado;
     }
 
-    @XmlElement
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
+    }
+
     public String getFormato() {
         return formato;
     }
 
-    @XmlElement
+    public void setFormato(String formato) {
+        this.formato = formato;
+    }
+
     public String getAmbiente() {
         return ambiente;
     }
 
-    @XmlElement
+    public void setAmbiente(String ambiente) {
+        this.ambiente = ambiente;
+    }
+
     public String getEvidencia() {
         return evidencia;
+    }
+
+    public void setEvidencia(String evidencia) {
+        this.evidencia = evidencia;
     }
 }
