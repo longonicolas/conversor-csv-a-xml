@@ -1,10 +1,7 @@
 package csvtoxml.controllers;
 
 import csvtoxml.entities.Row;
-import csvtoxml.repositories.RowRepository;
-import csvtoxml.services.GenerateRowListService;
 import csvtoxml.services.RowProcessorService;
-import csvtoxml.services.ToXmlService;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
@@ -16,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,35 +38,13 @@ public class JobController {
     private JobLauncher jobLauncher;
 
     @Autowired
-    private GenerateRowListService generateRowList;
-
-    @Autowired
-    private RowRepository rowRepository;
-
-    @Autowired
-    private ToXmlService toXmlService;
-
-    @Autowired
     private Job job;
 
     @Autowired
     private FlatFileItemReader<Row> reader;
 
     @PostMapping("/importRows")
-    public ResponseEntity<String> importCsvToDB(@RequestParam("file") MultipartFile file) throws IOException {
-
-        String fixedPath = Paths.get(baseDir, file.getOriginalFilename()).toString();
-        File fixedFile = new File(fixedPath);
-        file.transferTo(fixedFile);
-
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("El archivo es requerido y no puede estar vacío.");
-        }
-
-
-        reader.setResource(new FileSystemResource(fixedFile));
-
-
+    public ResponseEntity<String> importCsvToDB() throws IOException {
         JobParameters jobParameters = new JobParametersBuilder()
                 .addLong("startAt", System.currentTimeMillis())
                 .toJobParameters();
@@ -86,9 +60,6 @@ public class JobController {
 
     @GetMapping("/getRows")
     public Boolean getAllRows() throws Exception {
-//        generateRowList = new GenerateRowListService(rowRepository,toXmlService);
-//        List<Row> rows = generateRowList.getAllRows();
-//        rowProcessorService = new RowProcessorService(itemWriter);
         rowProcessorService.processRow();
         return true;
     }

@@ -1,13 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rows>
-    <trade><id>0</id><funcion>funcion1</funcion><tipo>tipoA</tipo>
-    <script>scriptTest</script><prueba>pruebaX</prueba>
-    <resultado>OK</resultado><formato>JSON</formato>
-    <ambiente>Producción</ambiente><evidencia>captura1.png</evidencia>
-    </trade>
-    <trade><id>0</id><funcion>funcion2</funcion><tipo>tipoB</tipo>
-    <script>scriptDev</script><prueba>pruebaY</prueba>
-        <resultado>FAIL</resultado><formato>XML</formato><ambiente>Desarrollo</ambiente>
-        <evidencia>captura2.png</evidencia>
-    </trade>
-    <trade><id>0</id><funcion>funcion3</funcion><tipo>tipoC</tipo><script>scriptProd</script><prueba>pruebaZ</prueba><resultado>OK</resultado><formato>CSV</formato><ambiente>Testing</ambiente><evidencia>captura3.png</evidencia></trade><trade><id>0</id><funcion>funcion4</funcion><tipo>tipoD</tipo><script>scriptFinal</script><prueba>pruebaW</prueba><resultado>FAIL</resultado><formato>TXT</formato><ambiente>QA</ambiente><evidencia>captura4.png</evidencia></trade></rows>
+<?xml version="1.0" encoding="UTF-8"?><rows><row><id0</id><funcion>Tier 1 - Regresion Automation></funcion>><tipoCaso 2</tipo><scriptAlta de Oportunidad</script><prueba>2 - Agregar el producto Cuenta Recaudadora</prueba><resultadoPass</resultado><formato04.02.2025 17:07></formato>><ambienteUAT</resultado><evidencia- -></formato>></evidencia>><row><id0</id><funcion>Tier 1 - Regresion Automation</funcion><tipo>Caso 1</tipo>><script>Alta de Oportunidad</script>><prueba1 - xxxxxxxxxxxx></script>><resultado>Pass</resultado><formato04.02.2025 17:03></formato><ambiente>UAT></ambiente><evidencia- -></prueba></row><row><id>0</id>><funcion>Tier 1 - Regresion Automation></tipo><tipo>Caso 3></script><scriptAlta de Oportunidad></resultado><prueba>3 - Agregar el producto Debito Directo</formato><resultado>Pass></ambiente><formato>04.02.2025 17:10</evidencia><ambiente>UAT</ambiente><evidencia>- -</evidencia></row><row><id>0</id>><funcionTier 1 - Regresion Automation></funcion><tipoCaso 4</funcion>><scriptAlta de Oportunidad</tipo>><prueba>4 - Agregar el producto Pagos AFIP</prueba><resultadoPass></prueba><formato04.02.2025 17:13></ambiente><ambienteUAT></evidencia>><evidencia- -</row></row><row><id>0</id><funcion>Tier 1 - Regresion Automation</funcion><tipo>Caso 5</tipo><script>Alta de Oportunidad</script><prueba>5 - Agregar el producto Fondos Comun de Inversion</prueba><resultado>Pass</resultado><formato>04.02.2025 17:16</formato><ambiente>UAT</ambiente><evidencia>- -</evidencia></row></rows>

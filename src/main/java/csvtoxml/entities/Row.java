@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @Table(name="ROW_INFO_BATCH")
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class Row {
 
     @Id
@@ -41,6 +40,8 @@ public class Row {
     @Column(name = "evidencia")
     private String evidencia;
 
+    public Row() {
+    }
 
     public Row(String funcion, String tipo, String script, String prueba, String resultado, String formato, String ambiente, String evidencia) {
         this.funcion = funcion;
@@ -87,5 +88,41 @@ public class Row {
 
     public String getEvidencia() {
         return evidencia;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setFuncion(String funcion) {
+        this.funcion = funcion;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public void setScript(String script) {
+        this.script = script;
+    }
+
+    public void setPrueba(String prueba) {
+        this.prueba = prueba;
+    }
+
+    public void setResultado(String resultado) {
+        this.resultado = resultado;
+    }
+
+    public void setAmbiente(String ambiente) {
+        this.ambiente = ambiente;
+    }
+
+    public void setFormato(String formato) {
+        this.formato = formato;
+    }
+
+    public void setEvidencia(String evidencia) {
+        this.evidencia = evidencia;
     }
 }

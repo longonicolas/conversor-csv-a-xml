@@ -3,9 +3,8 @@ package csvtoxml.config;
 
 import javax.sql.DataSource;
 
+import com.thoughtworks.xstream.XStream;
 import csvtoxml.entities.Row;
-import csvtoxml.repositories.RowRepository;
-import jakarta.persistence.EntityManagerFactory;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -40,14 +39,10 @@ import java.util.Map;
 @Configuration
 public class BatchConfiguration {
 
-    @Autowired
-    private RowRepository rowRepository;
-
-
     @Bean
     public FlatFileItemReader<Row> reader() {
         FlatFileItemReader<Row> reader = new FlatFileItemReader<>();
-        //reader.setResource(new FileSystemResource("src/main/resources/worksheet1.csv"));
+        reader.setResource(new FileSystemResource("src/main/resources/worksheet1.csv"));
         reader.setName("csvReader");
         reader.setLinesToSkip(1);
         reader.setLineMapper(lineMapper());
@@ -77,16 +72,6 @@ public class BatchConfiguration {
     }
 
     @Bean
-    public RepositoryItemWriter<Row> writer(){
-        RepositoryItemWriter<Row> writer = new RepositoryItemWriter<>();
-        writer.setRepository(rowRepository);
-        writer.setMethodName("save");
-        return writer;
-    }
-
-
-
-    @Bean
     public Job runJob(JobRepository jobRepository,PlatformTransactionManager transactionManager){
         return new JobBuilder("importRows",jobRepository)
                 .flow(step1(jobRepository,transactionManager))
@@ -101,7 +86,7 @@ public class BatchConfiguration {
         return new StepBuilder("csv-step",jobRepository).<Row, Row>chunk(10,transactionManager)
                 .reader(reader())
                 .processor(processor())
-                .writer(writer())
+                .writer(itemWriter())
                 .taskExecutor(taskExecutor())
                 .build();
     }
@@ -121,14 +106,23 @@ public class BatchConfiguration {
     @Bean
     public XStreamMarshaller tradeMarshaller() {
         Map<String, Class<?>> aliases = new HashMap<>();
-        aliases.put("trade", Row.class);
-        aliases.put("price", BigDecimal.class);
-        aliases.put("isin", String.class);
-        aliases.put("customer", String.class);
-        aliases.put("quantity", Long.class);
+        aliases.put("row", Row.class);
+        aliases.put("funcion", String.class);
+        aliases.put("tipo", String.class);
+        aliases.put("script", String.class);
+        aliases.put("prueba", String.class);
+        aliases.put("resultado", String.class);
+        aliases.put("formato", String.class);
+        aliases.put("ambiente", String.class);
+        aliases.put("evidencia", String.class);
 
         XStreamMarshaller marshaller = new XStreamMarshaller();
         marshaller.setAliases(aliases);
+
+        XStream xStream = marshaller.getXStream();
+        xStream.allowTypes(new Class[]{Row.class});
+
+
         return marshaller;
     }
 
