@@ -1,38 +1,24 @@
 package csvtoxml.config;
 
-
-import javax.sql.DataSource;
-
-import com.thoughtworks.xstream.XStream;
 import csvtoxml.entities.Row;
 import org.springframework.batch.core.*;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.repository.support.JobRepositoryFactoryBean;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.data.RepositoryItemWriter;
-import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
 import org.springframework.batch.item.xml.StaxEventItemWriter;
 import org.springframework.batch.item.xml.builder.StaxEventItemWriterBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.WritableResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.transaction.PlatformTransactionManager;
 
-
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,11 +31,7 @@ public class BatchConfiguration {
         reader.setResource(new FileSystemResource("src/main/resources/worksheet1.csv"));
         reader.setName("csvReader");
         reader.setLinesToSkip(1);
-        reader.setLineMapper(lineMapper());
-        return reader;
-    }
 
-    private LineMapper<Row> lineMapper() {
         DefaultLineMapper<Row> lineMapper = new DefaultLineMapper<>();
 
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
@@ -62,8 +44,10 @@ public class BatchConfiguration {
 
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
-        return lineMapper;
 
+        reader.setLineMapper(lineMapper);
+
+        return reader;
     }
 
     @Bean
@@ -78,8 +62,6 @@ public class BatchConfiguration {
                 .end()
                 .build();
     }
-
-
 
     @Bean
     public Step step1(JobRepository jobRepository,PlatformTransactionManager transactionManager)  {
@@ -99,44 +81,35 @@ public class BatchConfiguration {
     }
 
 
-
-
-
-
     @Bean
-    public XStreamMarshaller tradeMarshaller() {
-        Map<String, Class<?>> aliases = new HashMap<>();
-        aliases.put("row", Row.class);
-        aliases.put("funcion", String.class);
-        aliases.put("tipo", String.class);
-        aliases.put("script", String.class);
-        aliases.put("prueba", String.class);
-        aliases.put("resultado", String.class);
-        aliases.put("formato", String.class);
-        aliases.put("ambiente", String.class);
-        aliases.put("evidencia", String.class);
-
+    public XStreamMarshaller rowMarshaller() {
         XStreamMarshaller marshaller = new XStreamMarshaller();
-        marshaller.setAliases(aliases);
 
-        XStream xStream = marshaller.getXStream();
-        xStream.allowTypes(new Class[]{Row.class});
+            Map<String, Class> aliases = new HashMap<>();
+            aliases.put("row", Row.class);
+            aliases.put("funcion", String.class);
+            aliases.put("tipo", String.class);
+            aliases.put("script", String.class);
+            aliases.put("prueba", String.class);
+            aliases.put("resultado", String.class);
+            aliases.put("formato", String.class);
+            aliases.put("ambiente", String.class);
+            aliases.put("evidencia", String.class);
 
+            marshaller.setAliases(aliases);
 
-        return marshaller;
-    }
+            return marshaller;
+        }
 
 
     @Bean
     public StaxEventItemWriter<Row> itemWriter() {
         return new StaxEventItemWriterBuilder<Row>()
                 .name("rowWriter")
-                .marshaller(tradeMarshaller()) // Convierte Row en XML
-                .resource(new FileSystemResource("output.xml")) // Archivo de salida
+                .marshaller(rowMarshaller()) // Convierte Row en XML
+                .resource(new FileSystemResource("output1.xml")) // Archivo de salida
                 .rootTagName("rows") // Etiqueta raíz del XML
                 .overwriteOutput(true) // Sobrescribe si el archivo ya existe
                 .build();
     }
-
-
 }
