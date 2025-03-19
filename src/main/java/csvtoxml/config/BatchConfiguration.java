@@ -45,6 +45,7 @@ public class BatchConfiguration {
         reader.setName("csvReader");
         reader.setLinesToSkip(1);
         reader.setLineMapper(lineMapper());
+        //reader.setStrict(false);
         return reader;
     }
 
@@ -89,9 +90,9 @@ public class BatchConfiguration {
         XStream xStream = marshaller.getXStream();
         xStream.allowTypes(new Class[]{Row.class});
 
-        xStream.autodetectAnnotations(true);
-        xStream.ignoreUnknownElements();
-        xStream.aliasSystemAttribute(null, "class");
+        //xStream.autodetectAnnotations(true);
+        //xStream.ignoreUnknownElements();
+        //xStream.aliasSystemAttribute(null, "class");
 
         return marshaller;
     }
@@ -122,7 +123,7 @@ public class BatchConfiguration {
                 .reader(reader())
                 .processor(processor())
                 .writer(xmlWriter())
-                .taskExecutor(taskExecutor())
+                //.taskExecutor(taskExecutor())
                 .build();
     }
 
