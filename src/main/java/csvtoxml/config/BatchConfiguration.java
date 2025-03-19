@@ -25,6 +25,7 @@ import org.springframework.batch.item.xml.builder.StaxEventItemWriterBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.WritableResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
@@ -133,15 +134,14 @@ public class BatchConfiguration {
 
 
     @Bean
-    public StaxEventItemWriter itemWriter(WritableResource outputResource) {
+    public StaxEventItemWriter<Row> itemWriter() {
         return new StaxEventItemWriterBuilder<Row>()
-                .name("tradesWriter")
-                .marshaller(tradeMarshaller())
-                .resource(outputResource)
-                .rootTagName("row")
-                .overwriteOutput(true)
+                .name("rowWriter")
+                .marshaller(tradeMarshaller()) // Convierte Row en XML
+                .resource(new FileSystemResource("output.xml")) // Archivo de salida
+                .rootTagName("rows") // Etiqueta raíz del XML
+                .overwriteOutput(true) // Sobrescribe si el archivo ya existe
                 .build();
-
     }
 
 

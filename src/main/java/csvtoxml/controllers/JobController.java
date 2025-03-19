@@ -3,6 +3,7 @@ package csvtoxml.controllers;
 import csvtoxml.entities.Row;
 import csvtoxml.repositories.RowRepository;
 import csvtoxml.services.GenerateRowListService;
+import csvtoxml.services.RowProcessorService;
 import csvtoxml.services.ToXmlService;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -10,10 +11,12 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.xml.StaxEventItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +31,12 @@ public class JobController {
 
     @Value("${app.base-dir}")
     private String baseDir;
+
+    @Autowired
+    RowProcessorService rowProcessorService;
+
+    @Autowired
+    private StaxEventItemWriter<Row> itemWriter;
 
     @Autowired
     private JobLauncher jobLauncher;
@@ -76,9 +85,13 @@ public class JobController {
     }
 
     @GetMapping("/getRows")
-    public ResponseEntity<List<Row>> getAllRows() {
-        generateRowList = new GenerateRowListService(rowRepository,toXmlService);
-        List<Row> rows = generateRowList.getAllRows();
-        return ResponseEntity.ok(rows);
+    public Boolean getAllRows() throws Exception {
+//        generateRowList = new GenerateRowListService(rowRepository,toXmlService);
+//        List<Row> rows = generateRowList.getAllRows();
+//        rowProcessorService = new RowProcessorService(itemWriter);
+        rowProcessorService.processRow();
+        return true;
     }
+
+
 }

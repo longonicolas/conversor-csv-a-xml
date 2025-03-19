@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rows>
+    <trade><id>0</id><funcion>funcion1</funcion><tipo>tipoA</tipo>
+    <script>scriptTest</script><prueba>pruebaX</prueba>
+    <resultado>OK</resultado><formato>JSON</formato>
+    <ambiente>Producción</ambiente><evidencia>captura1.png</evidencia>
+    </trade>
+    <trade><id>0</id><funcion>funcion2</funcion><tipo>tipoB</tipo>
+    <script>scriptDev</script><prueba>pruebaY</prueba>
+        <resultado>FAIL</resultado><formato>XML</formato><ambiente>Desarrollo</ambiente>
+        <evidencia>captura2.png</evidencia>
+    </trade>
+    <trade><id>0</id><funcion>funcion3</funcion><tipo>tipoC</tipo><script>scriptProd</script><prueba>pruebaZ</prueba><resultado>OK</resultado><formato>CSV</formato><ambiente>Testing</ambiente><evidencia>captura3.png</evidencia></trade><trade><id>0</id><funcion>funcion4</funcion><tipo>tipoD</tipo><script>scriptFinal</script><prueba>pruebaW</prueba><resultado>FAIL</resultado><formato>TXT</formato><ambiente>QA</ambiente><evidencia>captura4.png</evidencia></trade></rows>
