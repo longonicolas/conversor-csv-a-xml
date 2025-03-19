@@ -3,6 +3,7 @@ package csvtoxml.config;
 
 import javax.sql.DataSource;
 
+import com.thoughtworks.xstream.MarshallingStrategy;
 import com.thoughtworks.xstream.XStream;
 import csvtoxml.entities.Row;
 
@@ -31,6 +32,7 @@ import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -90,9 +92,6 @@ public class BatchConfiguration {
         XStream xStream = marshaller.getXStream();
         xStream.allowTypes(new Class[]{Row.class});
 
-        //xStream.autodetectAnnotations(true);
-        //xStream.ignoreUnknownElements();
-        //xStream.aliasSystemAttribute(null, "class");
 
         return marshaller;
     }
@@ -107,6 +106,8 @@ public class BatchConfiguration {
                 .rootTagName("rows") // Etiqueta raíz del XML
                 .overwriteOutput(true) // Sobrescribe si el archivo ya existe
                 .build();
+
+
     }
 
     @Bean
