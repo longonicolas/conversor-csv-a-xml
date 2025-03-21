@@ -11,6 +11,7 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.item.file.LineMapper;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.mapping.DefaultLineMapper;
 import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
@@ -18,6 +19,7 @@ import org.springframework.batch.item.xml.StaxEventItemWriter;
 import org.springframework.batch.item.xml.builder.StaxEventItemWriterBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
@@ -45,6 +47,7 @@ public class BatchConfiguration {
         return reader;
     }
 
+    private LineMapper<Row> lineMapper() {
         DefaultLineMapper<Row> lineMapper = new DefaultLineMapper<>();
 
         DelimitedLineTokenizer lineTokenizer = new DelimitedLineTokenizer();
@@ -57,10 +60,8 @@ public class BatchConfiguration {
 
         lineMapper.setLineTokenizer(lineTokenizer);
         lineMapper.setFieldSetMapper(fieldSetMapper);
+        return lineMapper;
 
-        reader.setLineMapper(lineMapper);
-
-        return reader;
     }
 
     @Bean
@@ -84,7 +85,7 @@ public class BatchConfiguration {
         aliases.put("evidencia", String.class);
 
         XStreamMarshaller marshaller = new XStreamMarshaller();
-        marshaller.setAnnotatedClasses(Label.class);  // 🔹 Habilitar anotaciones en Label
+        marshaller.setAnnotatedClasses(Label.class);
         marshaller.setAliases(aliases);
 
 
@@ -136,35 +137,9 @@ public class BatchConfiguration {
     }
 
 
-    @Bean
-    public XStreamMarshaller rowMarshaller() {
-        XStreamMarshaller marshaller = new XStreamMarshaller();
 
-            Map<String, Class> aliases = new HashMap<>();
-            aliases.put("row", Row.class);
-            aliases.put("funcion", String.class);
-            aliases.put("tipo", String.class);
-            aliases.put("script", String.class);
-            aliases.put("prueba", String.class);
-            aliases.put("resultado", String.class);
-            aliases.put("formato", String.class);
-            aliases.put("ambiente", String.class);
-            aliases.put("evidencia", String.class);
-
-            marshaller.setAliases(aliases);
-
-            return marshaller;
-        }
-
-
-    @Bean
-    public StaxEventItemWriter<Row> itemWriter() {
-        return new StaxEventItemWriterBuilder<Row>()
-                .name("rowWriter")
-                .marshaller(rowMarshaller()) // Convierte Row en XML
-                .resource(new FileSystemResource("output1.xml")) // Archivo de salida
-                .rootTagName("rows") // Etiqueta raíz del XML
-                .overwriteOutput(true) // Sobrescribe si el archivo ya existe
-                .build();
-    }
 }
+
+
+
+
