@@ -1,16 +1,12 @@
 package csvtoxml.config;
 
-
-import javax.sql.DataSource;
-
-import com.thoughtworks.xstream.MarshallingStrategy;
 import com.thoughtworks.xstream.XStream;
+import csvtoxml.entities.Label;
 import csvtoxml.entities.Row;
 
-import lombok.Value;
+import csvtoxml.entities.RowOutput;
 
 import org.springframework.batch.core.*;
-import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -76,8 +72,10 @@ public class BatchConfiguration {
     @Bean
     public XStreamMarshaller tradeMarshaller() {
         Map<String, Class<?>> aliases = new HashMap<>();
-        aliases.put("row", Row.class);
+        aliases.put("row", RowOutput.class);
         aliases.put("funcion", String.class);
+        aliases.put("label", Label.class);
+        aliases.put("labels", List.class);
         aliases.put("tipo", String.class);
         aliases.put("script", String.class);
         aliases.put("prueba", String.class);
@@ -87,10 +85,12 @@ public class BatchConfiguration {
         aliases.put("evidencia", String.class);
 
         XStreamMarshaller marshaller = new XStreamMarshaller();
+        marshaller.setAnnotatedClasses(Label.class);  // 🔹 Habilitar anotaciones en Label
         marshaller.setAliases(aliases);
 
+
         XStream xStream = marshaller.getXStream();
-        xStream.allowTypes(new Class[]{Row.class});
+        xStream.allowTypes(new Class[]{RowOutput.class, Label.class});
 
 
         return marshaller;
@@ -98,12 +98,12 @@ public class BatchConfiguration {
 
 
     @Bean
-    public StaxEventItemWriter<Row> xmlWriter() {
-        return new StaxEventItemWriterBuilder<Row>()
+    public StaxEventItemWriter<RowOutput> xmlWriter() {
+        return new StaxEventItemWriterBuilder<RowOutput>()
                 .name("rowWriter")
                 .marshaller(tradeMarshaller()) // Convierte Row en XML
                 .resource(new FileSystemResource("output.xml")) // Archivo de salida
-                .rootTagName("rows") // Etiqueta raíz del XML
+                .rootTagName("ns2:test-suite") // Etiqueta raíz del XML
                 .overwriteOutput(true) // Sobrescribe si el archivo ya existe
                 .build();
 
@@ -120,7 +120,8 @@ public class BatchConfiguration {
 
     @Bean
     public Step step1(JobRepository jobRepository,PlatformTransactionManager transactionManager)  {
-        return new StepBuilder("csv-step",jobRepository).<Row, Row>chunk(10,transactionManager)
+        return new StepBuilder("csv-step",jobRepository)
+                .<Row, RowOutput>chunk(10, transactionManager)
                 .reader(reader())
                 .processor(processor())
                 .writer(xmlWriter())
