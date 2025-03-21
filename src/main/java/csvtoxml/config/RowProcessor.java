@@ -4,14 +4,15 @@ package csvtoxml.config;
 import csvtoxml.entities.Label;
 import csvtoxml.entities.Row;
 import csvtoxml.entities.RowOutput;
+import csvtoxml.entities.TestSuite;
 import org.springframework.batch.item.ItemProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RowProcessor implements ItemProcessor<Row,RowOutput> {
+public class RowProcessor implements ItemProcessor<Row, TestSuite> {
     @Override
-    public RowOutput process(Row row) throws Exception {
+    public TestSuite process(Row row) throws Exception {
 
         RowOutput rowOutput = new RowOutput();
 
@@ -35,6 +36,8 @@ public class RowProcessor implements ItemProcessor<Row,RowOutput> {
         labels.add(label4);
         rowOutput.setLabels(labels);
 
-        return rowOutput;
+        TestSuite testSuite = new TestSuite(rowOutput);
+
+        return testSuite;
     }
 }

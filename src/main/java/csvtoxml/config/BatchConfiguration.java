@@ -6,6 +6,7 @@ import csvtoxml.entities.Row;
 
 import csvtoxml.entities.RowOutput;
 
+import csvtoxml.entities.TestSuite;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
@@ -72,6 +73,7 @@ public class BatchConfiguration {
     @Bean
     public XStreamMarshaller tradeMarshaller() {
         Map<String, Class<?>> aliases = new HashMap<>();
+        aliases.put("test-case", TestSuite.class);
         aliases.put("row", RowOutput.class);
         aliases.put("funcion", String.class);
         aliases.put("label", Label.class);
@@ -90,20 +92,19 @@ public class BatchConfiguration {
 
 
         XStream xStream = marshaller.getXStream();
-        xStream.allowTypes(new Class[]{RowOutput.class, Label.class});
-
+        xStream.allowTypes(new Class[]{TestSuite.class,RowOutput.class, Label.class});
 
         return marshaller;
     }
 
 
     @Bean
-    public StaxEventItemWriter<RowOutput> xmlWriter() {
-        return new StaxEventItemWriterBuilder<RowOutput>()
-                .name("rowWriter")
+    public StaxEventItemWriter<TestSuite> xmlWriter() {
+        return new StaxEventItemWriterBuilder<TestSuite>()
+                .name("TestWriter")
                 .marshaller(tradeMarshaller()) // Convierte Row en XML
                 .resource(new FileSystemResource("output.xml")) // Archivo de salida
-                .rootTagName("ns2:test-suite") // Etiqueta raíz del XML
+                .rootTagName("test-suite") // Etiqueta raíz del XML
                 .overwriteOutput(true) // Sobrescribe si el archivo ya existe
                 .build();
 
@@ -121,7 +122,7 @@ public class BatchConfiguration {
     @Bean
     public Step step1(JobRepository jobRepository,PlatformTransactionManager transactionManager)  {
         return new StepBuilder("csv-step",jobRepository)
-                .<Row, RowOutput>chunk(10, transactionManager)
+                .<Row, TestSuite>chunk(10, transactionManager)
                 .reader(reader())
                 .processor(processor())
                 .writer(xmlWriter())
