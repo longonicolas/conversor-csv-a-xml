@@ -3,40 +3,34 @@ package csvtoxml.entities;
 
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlRootElement(name = "row")
-@XmlAccessorType(XmlAccessType.FIELD)
+//@XmlRootElement(name = "row")
+//@XmlAccessorType(XmlAccessType.FIELD)
 @Data
 public class Row {
 
-    @XmlElement(name = "funcion")
+    //@XmlElement(name = "funcion")
     private String funcion;
 
-    @XmlElement(name = "tipo")
+    //@XmlElement(name = "tipo")
     private String tipo;
 
-    @XmlElement(name = "script")
+    //@XmlElement(name = "script")
     private String script;
 
-    @XmlElement(name = "prueba")
+    //@XmlElement(name = "prueba")
     private String prueba;
 
-    @XmlElement(name = "resultado")
+    //@XmlElement(name = "resultado")
     private String resultado;
 
-    @XmlElement(name = "formato")
+    //@XmlElement(name = "formato")
     private String formato;
 
-    @XmlElement(name = "ambiente")
+    //@XmlElement(name = "ambiente")
     private String ambiente;
 
-    @XmlElement(name = "evidencia")
+    //@XmlElement(name = "evidencia")
     private String evidencia;
 
     public Row() {
