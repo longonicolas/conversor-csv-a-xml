@@ -1,12 +1,8 @@
 package csvtoxml.config;
 
 import com.thoughtworks.xstream.XStream;
-import csvtoxml.entities.Label;
-import csvtoxml.entities.Row;
+import csvtoxml.entities.*;
 
-import csvtoxml.entities.RowOutput;
-
-import csvtoxml.entities.TestSuite;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
@@ -28,10 +24,7 @@ import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Configuration
 public class BatchConfiguration {
@@ -73,11 +66,12 @@ public class BatchConfiguration {
     @Bean
     public XStreamMarshaller tradeMarshaller() {
         Map<String, Class<?>> aliases = new HashMap<>();
-        aliases.put("test-case", TestSuite.class);
+        aliases.put("test-cases", TestSuite.class);
+        aliases.put("test-case", TestCase.class);
         aliases.put("row", RowOutput.class);
-        aliases.put("funcion", String.class);
         aliases.put("label", Label.class);
-        aliases.put("labels", List.class);
+        aliases.put("labels", ArrayList.class); // Asegurar compatibilidad con listas
+        aliases.put("funcion", String.class);
         aliases.put("tipo", String.class);
         aliases.put("script", String.class);
         aliases.put("prueba", String.class);
@@ -87,12 +81,11 @@ public class BatchConfiguration {
         aliases.put("evidencia", String.class);
 
         XStreamMarshaller marshaller = new XStreamMarshaller();
-        marshaller.setAnnotatedClasses(Label.class);
+        marshaller.setAnnotatedClasses(TestSuite.class, TestCase.class, RowOutput.class, Label.class);
         marshaller.setAliases(aliases);
 
-
         XStream xStream = marshaller.getXStream();
-        xStream.allowTypes(new Class[]{TestSuite.class,RowOutput.class, Label.class});
+        xStream.allowTypes(new Class[]{TestSuite.class, TestCase.class, RowOutput.class, Label.class, ArrayList.class});
 
         return marshaller;
     }

@@ -1,16 +1,16 @@
 
 package csvtoxml.config;
 
-import csvtoxml.entities.Label;
-import csvtoxml.entities.Row;
-import csvtoxml.entities.RowOutput;
-import csvtoxml.entities.TestSuite;
+import csvtoxml.entities.*;
 import org.springframework.batch.item.ItemProcessor;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RowProcessor implements ItemProcessor<Row, TestSuite> {
+
+    private final TestSuite testSuite = new TestSuite(); // Se mantiene para agregar TestCases
+
     @Override
     public TestSuite process(Row row) throws Exception {
 
@@ -36,7 +36,9 @@ public class RowProcessor implements ItemProcessor<Row, TestSuite> {
         labels.add(label4);
         rowOutput.setLabels(labels);
 
-        TestSuite testSuite = new TestSuite(rowOutput);
+        // Crea los test case y los agrega a testSuite
+        TestCase testCase = new TestCase(rowOutput);
+        testSuite.addTestCase(testCase);
 
         return testSuite;
     }
