@@ -1,19 +1,17 @@
 package csvtoxml.entities;
 
-
-
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
-@XmlRootElement(name = "row")
-@XmlAccessorType(XmlAccessType.FIELD)
-@Data
-public class Row {
+@XStreamAlias("row")
+public class RowOutput {
 
     @XmlElement(name = "funcion")
     private String funcion;
@@ -39,7 +37,19 @@ public class Row {
     @XmlElement(name = "evidencia")
     private String evidencia;
 
-    public Row() {
+    @XStreamAlias("labels")
+    @XStreamImplicit
+    private List<Label> labels;
+
+    public RowOutput() {
+    }
+
+    public List<Label> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<Label> labels) {
+        this.labels = labels;
     }
 
     public String getFuncion() {
@@ -105,4 +115,5 @@ public class Row {
     public void setEvidencia(String evidencia) {
         this.evidencia = evidencia;
     }
+
 }
