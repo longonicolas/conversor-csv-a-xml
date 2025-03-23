@@ -4,30 +4,30 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
 
+import javax.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 import java.util.List;
 
 @XStreamAlias("test-cases")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class TestSuite {
+    @XmlElement(name = "name")
+    private String name = "DWP";
 
-    @XStreamImplicit(itemFieldName = "test-case") // Indica que es una lista de <test-case>
-    private List<TestCase> testCases = new ArrayList<>();
+    @XmlElement(name = "title")
+    private String title = "DWP";
+
+    private RowOutput testCase;
 
     public TestSuite() {
     }
 
-    public List<TestCase> getTestCases() {
-        return testCases;
+    public RowOutput getTestCase() {
+        return testCase;
     }
 
-    public void setTestCases(List<TestCase> testCases) {
-        this.testCases = testCases;
-    }
-
-    public void addTestCase(TestCase testCase) {
-        this.testCases.add(testCase);
+    public void setTestCase(RowOutput testCase) {
+        this.testCase = testCase;
     }
 }

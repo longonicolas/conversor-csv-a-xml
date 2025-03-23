@@ -41,6 +41,11 @@ public class RowOutput {
     @XStreamImplicit
     private List<Label> labels;
 
+    @XStreamImplicit(itemFieldName = "parameter")
+    List<Parameter> parameters;
+
+
+
     public RowOutput() {
     }
 
@@ -114,6 +119,14 @@ public class RowOutput {
 
     public void setEvidencia(String evidencia) {
         this.evidencia = evidencia;
+    }
+
+    public List<Parameter> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(List<Parameter> parameters) {
+        this.parameters = parameters;
     }
 
 }

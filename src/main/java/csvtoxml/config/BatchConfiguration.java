@@ -67,10 +67,11 @@ public class BatchConfiguration {
     public XStreamMarshaller tradeMarshaller() {
         Map<String, Class<?>> aliases = new HashMap<>();
         aliases.put("test-cases", TestSuite.class);
-        aliases.put("test-case", TestCase.class);
         aliases.put("row", RowOutput.class);
         aliases.put("label", Label.class);
-        aliases.put("labels", ArrayList.class); // Asegurar compatibilidad con listas
+        aliases.put("labels", ArrayList.class);
+        aliases.put("parameter", Parameter.class);
+        aliases.put("parameters", ArrayList.class);
         aliases.put("funcion", String.class);
         aliases.put("tipo", String.class);
         aliases.put("script", String.class);
@@ -81,11 +82,11 @@ public class BatchConfiguration {
         aliases.put("evidencia", String.class);
 
         XStreamMarshaller marshaller = new XStreamMarshaller();
-        marshaller.setAnnotatedClasses(TestSuite.class, TestCase.class, RowOutput.class, Label.class);
+        marshaller.setAnnotatedClasses(TestSuite.class, RowOutput.class, Label.class);
         marshaller.setAliases(aliases);
 
         XStream xStream = marshaller.getXStream();
-        xStream.allowTypes(new Class[]{TestSuite.class, TestCase.class, RowOutput.class, Label.class, ArrayList.class});
+        xStream.allowTypes(new Class[]{TestSuite.class, RowOutput.class, Label.class, ArrayList.class});
 
         return marshaller;
     }
