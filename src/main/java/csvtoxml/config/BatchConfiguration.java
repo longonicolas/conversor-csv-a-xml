@@ -16,11 +16,9 @@ import org.springframework.batch.item.xml.StaxEventItemWriter;
 import org.springframework.batch.item.xml.builder.StaxEventItemWriterBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
-import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -66,7 +64,8 @@ public class BatchConfiguration {
     @Bean
     public XStreamMarshaller tradeMarshaller() {
         Map<String, Class<?>> aliases = new HashMap<>();
-        aliases.put("test-cases", TestSuite.class);
+        aliases.put("test-cases", TestCase.class);
+        aliases.put("test-case", ArrayList.class);
         aliases.put("row", RowOutput.class);
         aliases.put("label", Label.class);
         aliases.put("labels", ArrayList.class);
@@ -82,27 +81,25 @@ public class BatchConfiguration {
         aliases.put("evidencia", String.class);
 
         XStreamMarshaller marshaller = new XStreamMarshaller();
-        marshaller.setAnnotatedClasses(TestSuite.class, RowOutput.class, Label.class);
+        marshaller.setAnnotatedClasses(TestCase.class, RowOutput.class, Label.class);
         marshaller.setAliases(aliases);
 
         XStream xStream = marshaller.getXStream();
-        xStream.allowTypes(new Class[]{TestSuite.class, RowOutput.class, Label.class, ArrayList.class});
+        xStream.allowTypes(new Class[]{TestCase.class, RowOutput.class, Label.class, ArrayList.class});
 
         return marshaller;
     }
 
 
     @Bean
-    public StaxEventItemWriter<TestSuite> xmlWriter() {
-        return new StaxEventItemWriterBuilder<TestSuite>()
+    public StaxEventItemWriter<TestCase> xmlWriter() {
+        return new StaxEventItemWriterBuilder<TestCase>()
                 .name("TestWriter")
                 .marshaller(tradeMarshaller()) // Convierte Row en XML
                 .resource(new FileSystemResource("output.xml")) // Archivo de salida
-                .rootTagName("test-suite") // Etiqueta raíz del XML
+                .rootTagName("test-cases") // Etiqueta raíz del XML
                 .overwriteOutput(true) // Sobrescribe si el archivo ya existe
                 .build();
-
-
     }
 
     @Bean
@@ -116,7 +113,7 @@ public class BatchConfiguration {
     @Bean
     public Step step1(JobRepository jobRepository,PlatformTransactionManager transactionManager)  {
         return new StepBuilder("csv-step",jobRepository)
-                .<Row, TestSuite>chunk(10, transactionManager)
+                .<Row, TestCase>chunk(1, transactionManager)
                 .reader(reader())
                 .processor(processor())
                 .writer(xmlWriter())
