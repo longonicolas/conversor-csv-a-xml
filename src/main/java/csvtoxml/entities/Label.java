@@ -1,6 +1,5 @@
 package csvtoxml.entities;
 
-
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 
@@ -17,22 +16,6 @@ public class Label {
 
     public Label(String nombre, String valor) {
         this.nombre = nombre;
-        this.valor = valor;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getValor() {
-        return valor;
-    }
-
-    public void setValor(String valor) {
         this.valor = valor;
     }
 }

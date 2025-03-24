@@ -7,7 +7,6 @@ import java.util.List;
 
 public class RowProcessor implements ItemProcessor<Row, TestCase> {
 
-
     @Override
     public TestCase process(Row row) {
         return generateTestCases(row);
