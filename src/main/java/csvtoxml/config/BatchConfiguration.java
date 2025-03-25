@@ -95,7 +95,7 @@ public class BatchConfiguration {
         return new StaxEventItemWriterBuilder<TestCase>()
                 .name("TestWriter")
                 .marshaller(tradeMarshaller()) // Convierte Row en XML
-                .resource(new FileSystemResource("output.xml")) // Archivo de salida
+                .resource(new FileSystemResource("src/main/resources/output.xml")) // Archivo de salida
                 .rootTagName("test-cases") // Etiqueta raíz del XML
                 .overwriteOutput(true) // Sobrescribe si el archivo ya existe
                 .build();

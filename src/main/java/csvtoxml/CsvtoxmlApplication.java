@@ -1,11 +1,10 @@
 package csvtoxml;
-
+import csvtoxml.entities.TestSuite;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +12,9 @@ import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class CsvtoxmlApplication {
+
+	private static final String FILE_PATH = "C:\\Users\\nicolas.longo\\Desktop\\csv-a-xml-accenture-bbva\\output.xml";
+	private static final String OUTPUT_PATH = "C:\\Users\\nicolas.longo\\Desktop\\csv-a-xml-accenture-bbva\\final_output.xml";
 
 	public static void main(String[] args) {
 		SpringApplication.run(CsvtoxmlApplication.class, args);
@@ -28,11 +30,20 @@ public class CsvtoxmlApplication {
 			try {
 				JobExecution run = jobLauncher.run(job, jobParameters);
 				System.out.println("Job Status: " + run.getStatus());
+
+				// Solo ejecutar la envoltura si el Job finaliza con éxito
+				if (run.getStatus() == BatchStatus.COMPLETED) {
+					System.out.println("Job finalizado exitosamente. Envolviendo output.xml...");
+					TestSuite.wrapWithTestSuite(FILE_PATH, OUTPUT_PATH);
+					System.out.println("Proceso finalizado correctamente.");
+				} else {
+					System.err.println("El Job no finalizó correctamente. No se ejecutará la envoltura.");
+				}
+
 			} catch (JobExecutionAlreadyRunningException | JobRestartException |
 					 JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-				throw new RuntimeException(e);
+				throw new RuntimeException("Error ejecutando el Job", e);
 			}
 		};
 	}
 }
-
