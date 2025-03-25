@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class CsvtoxmlApplication {
 
-	private static final String FILE_PATH = "C:\\Users\\nicolas.longo\\Desktop\\csv-a-xml-accenture-bbva\\output.xml";
-	private static final String OUTPUT_PATH = "C:\\Users\\nicolas.longo\\Desktop\\csv-a-xml-accenture-bbva\\final_output.xml";
+	private static final String FILE_PATH = "src/main/resources/output.xml";
+	private static final String OUTPUT_PATH = "src/main/resources/output.xml";;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CsvtoxmlApplication.class, args);
