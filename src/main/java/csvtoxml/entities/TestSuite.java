@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 public class TestSuite {
     public static void wrapWithTestSuite(String inputPath, String outputPath) {
         try {
@@ -19,16 +18,17 @@ public class TestSuite {
 
             String xmlBody = content.substring(xmlHeader.length()).trim();
 
+            // Definir correctamente el namespace ns2 dentro de la etiqueta
             String wrappedContent = xmlHeader + "\n" +
-                    "<test-suite ns2=\"12345\" start=\"73782437828733\" stop=\"5345345544\">\n" +
-                    "    <name>NSW</name>\n" +
-                    "    <title>NSW</title>\n" +
+                    "<ns2:test-suite xmlns:ns2=\"urn:model.allure.qatools.yandex.ru\" ns2=\"12345\" start=\"73782437828733\" stop=\"5345345544\">\n" +
+                    "    <name>DWP</name>\n" +
+                    "    <title>DWP</title>\n" +
                     xmlBody + "\n" +
-                    "</test-suite>";
+                    "</ns2:test-suite>";
 
             Files.write(Paths.get(outputPath), wrappedContent.getBytes());
 
-            System.out.println("Archivo envuelto correctamente y guardado en: " + outputPath);
+            System.out.println("Archivo guardado en: " + outputPath);
         } catch (IOException e) {
             System.err.println("Error al procesar el archivo: " + e.getMessage());
         } catch (IllegalArgumentException e) {

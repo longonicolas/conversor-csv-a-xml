@@ -33,7 +33,6 @@ public class CsvtoxmlApplication {
 
 				// Solo ejecutar la envoltura si el Job finaliza con éxito
 				if (run.getStatus() == BatchStatus.COMPLETED) {
-					System.out.println("Job finalizado exitosamente. Envolviendo output.xml...");
 					TestSuite.wrapWithTestSuite(FILE_PATH, OUTPUT_PATH);
 					System.out.println("Proceso finalizado correctamente.");
 				} else {
