@@ -28,19 +28,32 @@ import java.util.*;
 @Configuration
 public class BatchConfiguration {
 
-    private static final String INPUT = System.getProperty("user.dir") + File.separator + "worksheet.csv";
     private static final String OUTPUT = System.getProperty("user.dir") + File.separator + "output.xml";
 
     @Bean
     public FlatFileItemReader<Row> reader() {
         FlatFileItemReader<Row> reader = new FlatFileItemReader<>();
-        reader.setResource(new FileSystemResource(INPUT));
+
+        // Detectar automáticamente el archivo CSV en el mismo directorio del JAR
+        File directory = new File(System.getProperty("user.dir"));
+        File[] csvFiles = directory.listFiles((dir, name) -> name.toLowerCase().endsWith(".csv"));
+
+        if (csvFiles == null || csvFiles.length == 0) {
+            throw new RuntimeException("No se encontró ningún archivo CSV en el directorio actual.");
+        }
+
+        // Tomar el primer archivo encontrado
+        String inputFilePath = csvFiles[0].getAbsolutePath();
+        System.out.println("Archivo CSV detectado para lectura: " + inputFilePath);
+
+        reader.setResource(new FileSystemResource(inputFilePath));
         reader.setName("csvReader");
         reader.setLinesToSkip(1);
         reader.setLineMapper(lineMapper());
-        //reader.setStrict(false);
+
         return reader;
     }
+
 
     private LineMapper<Row> lineMapper() {
         DefaultLineMapper<Row> lineMapper = new DefaultLineMapper<>();
@@ -99,8 +112,8 @@ public class BatchConfiguration {
                 .name("TestWriter")
                 .marshaller(tradeMarshaller()) // Convierte Row en XML
                 .resource(new FileSystemResource(OUTPUT)) // Archivo de salida
-                .rootTagName("test-cases") // Etiqueta raíz del XML
-                .overwriteOutput(true) // Sobrescribe si el archivo ya existe
+                .rootTagName("test-cases")
+                .overwriteOutput(true)
                 .build();
     }
 

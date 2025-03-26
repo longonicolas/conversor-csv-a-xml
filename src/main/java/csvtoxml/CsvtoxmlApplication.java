@@ -16,7 +16,6 @@ import java.io.File;
 public class CsvtoxmlApplication {
 
 	private static final String FILE_PATH = System.getProperty("user.dir") + File.separator + "output.xml";
-	private static final String OUTPUT_PATH = FILE_PATH;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CsvtoxmlApplication.class, args);
@@ -35,7 +34,7 @@ public class CsvtoxmlApplication {
 
 				// Solo ejecutar la envoltura si el Job finaliza con éxito
 				if (run.getStatus() == BatchStatus.COMPLETED) {
-					TestSuite.wrapWithTestSuite(FILE_PATH, OUTPUT_PATH);
+					TestSuite.wrapWithTestSuite(FILE_PATH, FILE_PATH);
 					System.out.println("Proceso finalizado correctamente.");
 				} else {
 					System.err.println("El Job no finalizó correctamente.");
