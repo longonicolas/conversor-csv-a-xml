@@ -46,11 +46,10 @@ public class TestCase {
     private String evidencia;
 
     @XStreamAlias("labels")
-    @XStreamImplicit
-    private List<Label> labels;
+    private Labels labels;
 
-    @XStreamImplicit(itemFieldName = "parameter")
-    List<Parameter> parameters;
+    private Parameters parameters;
+
     public TestCase() {
     }
 
@@ -99,11 +98,11 @@ public class TestCase {
         this.evidencia = evidencia;
     }
 
-    public void setLabels(List<Label> labels) {
-        this.labels = labels;
+    public void setParameters(Parameters parameters) {
+        this.parameters = parameters;
     }
 
-    public void setParameters(List<Parameter> parameters) {
-        this.parameters = parameters;
+    public void setLabels(Labels labels) {
+        this.labels = labels;
     }
 }
