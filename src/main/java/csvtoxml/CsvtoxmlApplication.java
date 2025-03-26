@@ -10,11 +10,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import java.io.File;
+
 @SpringBootApplication
 public class CsvtoxmlApplication {
 
-	private static final String FILE_PATH = "src/main/resources/output.xml";
-	private static final String OUTPUT_PATH = "src/main/resources/output.xml";;
+	private static final String FILE_PATH = System.getProperty("user.dir") + File.separator + "output.xml";
+	private static final String OUTPUT_PATH = FILE_PATH;
 
 	public static void main(String[] args) {
 		SpringApplication.run(CsvtoxmlApplication.class, args);
@@ -36,7 +38,7 @@ public class CsvtoxmlApplication {
 					TestSuite.wrapWithTestSuite(FILE_PATH, OUTPUT_PATH);
 					System.out.println("Proceso finalizado correctamente.");
 				} else {
-					System.err.println("El Job no finalizó correctamente. No se ejecutará la envoltura.");
+					System.err.println("El Job no finalizó correctamente.");
 				}
 
 			} catch (JobExecutionAlreadyRunningException | JobRestartException |

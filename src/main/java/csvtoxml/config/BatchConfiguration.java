@@ -22,16 +22,19 @@ import org.springframework.core.task.TaskExecutor;
 import org.springframework.oxm.xstream.XStreamMarshaller;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import java.io.File;
 import java.util.*;
 
 @Configuration
 public class BatchConfiguration {
 
+    private static final String INPUT = System.getProperty("user.dir") + File.separator + "worksheet.csv";
+    private static final String OUTPUT = System.getProperty("user.dir") + File.separator + "output.xml";
 
     @Bean
     public FlatFileItemReader<Row> reader() {
         FlatFileItemReader<Row> reader = new FlatFileItemReader<>();
-        reader.setResource(new FileSystemResource("src/main/resources/worksheet1.csv"));
+        reader.setResource(new FileSystemResource(INPUT));
         reader.setName("csvReader");
         reader.setLinesToSkip(1);
         reader.setLineMapper(lineMapper());
@@ -95,7 +98,7 @@ public class BatchConfiguration {
         return new StaxEventItemWriterBuilder<TestCase>()
                 .name("TestWriter")
                 .marshaller(tradeMarshaller()) // Convierte Row en XML
-                .resource(new FileSystemResource("src/main/resources/output.xml")) // Archivo de salida
+                .resource(new FileSystemResource(OUTPUT)) // Archivo de salida
                 .rootTagName("test-cases") // Etiqueta raíz del XML
                 .overwriteOutput(true) // Sobrescribe si el archivo ya existe
                 .build();
