@@ -28,13 +28,13 @@ import java.util.*;
 @Configuration
 public class BatchConfiguration {
 
-    private static final String OUTPUT = System.getProperty("user.dir") + File.separator + "output.xml";
+    private String inputFilePath;
+    private String outputFilePath;
 
     @Bean
     public FlatFileItemReader<Row> reader() {
         FlatFileItemReader<Row> reader = new FlatFileItemReader<>();
 
-        // Detectar automáticamente el archivo CSV en el mismo directorio del JAR
         File directory = new File(System.getProperty("user.dir"));
         File[] csvFiles = directory.listFiles((dir, name) -> name.toLowerCase().endsWith(".csv"));
 
@@ -42,9 +42,13 @@ public class BatchConfiguration {
             throw new RuntimeException("No se encontró ningún archivo CSV en el directorio actual.");
         }
 
-        // Tomar el primer archivo encontrado
-        String inputFilePath = csvFiles[0].getAbsolutePath();
-        System.out.println("Archivo CSV detectado para lectura: " + inputFilePath);
+        // Obtener el primer archivo CSV y generar su nombre de salida en XML
+        this.inputFilePath = csvFiles[0].getAbsolutePath();
+        String fileNameWithoutExt = csvFiles[0].getName().replaceFirst("[.][^.]+$", "");
+        this.outputFilePath = System.getProperty("user.dir") + File.separator + fileNameWithoutExt + ".xml";
+
+        System.out.println("Archivo CSV detectado: " + inputFilePath);
+        System.out.println("Archivo de salida XML: " + outputFilePath);
 
         reader.setResource(new FileSystemResource(inputFilePath));
         reader.setName("csvReader");
@@ -52,6 +56,10 @@ public class BatchConfiguration {
         reader.setLineMapper(lineMapper());
 
         return reader;
+    }
+
+    public String getOutputFilePath() {
+        return outputFilePath;
     }
 
 
@@ -111,7 +119,7 @@ public class BatchConfiguration {
         return new StaxEventItemWriterBuilder<TestCase>()
                 .name("TestWriter")
                 .marshaller(tradeMarshaller()) // Convierte Row en XML
-                .resource(new FileSystemResource(OUTPUT)) // Archivo de salida
+                .resource(new FileSystemResource(outputFilePath)) // Asignar nombre dinámicamente
                 .rootTagName("test-cases")
                 .overwriteOutput(true)
                 .build();

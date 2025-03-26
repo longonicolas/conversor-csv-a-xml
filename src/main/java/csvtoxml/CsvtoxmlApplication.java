@@ -1,4 +1,5 @@
 package csvtoxml;
+import csvtoxml.config.BatchConfiguration;
 import csvtoxml.entities.TestSuite;
 import org.springframework.batch.core.*;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -15,15 +16,18 @@ import java.io.File;
 @SpringBootApplication
 public class CsvtoxmlApplication {
 
-	private static final String FILE_PATH = System.getProperty("user.dir") + File.separator + "output.xml";
+	//private static final String FILE_PATH = System.getProperty("user.dir") + File.separator + "output.xml";
 
 	public static void main(String[] args) {
 		SpringApplication.run(CsvtoxmlApplication.class, args);
 	}
 
 	@Bean
-	CommandLineRunner startBatchJob(JobLauncher jobLauncher, Job job) {
+	CommandLineRunner startBatchJob(JobLauncher jobLauncher, Job job, BatchConfiguration batchConfig) {
 		return args -> {
+			String outputFilePath = batchConfig.getOutputFilePath();
+			System.out.println("Procesando archivo, salida esperada: " + outputFilePath);
+
 			JobParameters jobParameters = new JobParametersBuilder()
 					.addLong("startAt", System.currentTimeMillis())
 					.toJobParameters();
@@ -34,7 +38,7 @@ public class CsvtoxmlApplication {
 
 				// Solo ejecutar la envoltura si el Job finaliza con éxito
 				if (run.getStatus() == BatchStatus.COMPLETED) {
-					TestSuite.wrapWithTestSuite(FILE_PATH, FILE_PATH);
+					TestSuite.wrapWithTestSuite(outputFilePath, outputFilePath);
 					System.out.println("Proceso finalizado correctamente.");
 				} else {
 					System.err.println("El Job no finalizó correctamente.");
