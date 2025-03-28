@@ -1,4 +1,5 @@
 package csvtoxml;
+
 import csvtoxml.config.BatchConfiguration;
 import csvtoxml.entities.TestSuite;
 import org.springframework.batch.core.*;
@@ -12,11 +13,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.io.File;
+import java.util.List;
 
 @SpringBootApplication
 public class CsvtoxmlApplication {
-
-	//private static final String FILE_PATH = System.getProperty("user.dir") + File.separator + "output.xml";
 
 	public static void main(String[] args) {
 		SpringApplication.run(CsvtoxmlApplication.class, args);
@@ -25,8 +25,13 @@ public class CsvtoxmlApplication {
 	@Bean
 	CommandLineRunner startBatchJob(JobLauncher jobLauncher, Job job, BatchConfiguration batchConfig) {
 		return args -> {
-			String outputFilePath = batchConfig.getOutputFilePath();
-			System.out.println("Procesando archivo, salida esperada: " + outputFilePath);
+			List<String> outputFilePaths = batchConfig.getOutputFilePaths();
+			if (outputFilePaths.isEmpty()) {
+				System.err.println("No se encontraron archivos CSV para procesar.");
+				return;
+			}
+
+			System.out.println("Procesando archivos, salidas esperadas: " + outputFilePaths);
 
 			JobParameters jobParameters = new JobParametersBuilder()
 					.addLong("startAt", System.currentTimeMillis())
@@ -38,7 +43,10 @@ public class CsvtoxmlApplication {
 
 				// Solo ejecutar la envoltura si el Job finaliza con éxito
 				if (run.getStatus() == BatchStatus.COMPLETED) {
-					TestSuite.wrapWithTestSuite(outputFilePath, outputFilePath);
+					for (String outputFilePath : outputFilePaths) {
+						TestSuite.wrapWithTestSuite(outputFilePath, outputFilePath);
+						System.out.println("Archivo envuelto correctamente: " + outputFilePath);
+					}
 					System.out.println("Proceso finalizado correctamente.");
 				} else {
 					System.err.println("El Job no finalizó correctamente.");
