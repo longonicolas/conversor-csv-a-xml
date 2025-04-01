@@ -45,7 +45,6 @@ public class CsvtoxmlApplication {
 				if (run.getStatus() == BatchStatus.COMPLETED) {
 					for (String outputFilePath : outputFilePaths) {
 						TestSuite.wrapWithTestSuite(outputFilePath, outputFilePath);
-						System.out.println("Archivo envuelto correctamente: " + outputFilePath);
 					}
 					System.out.println("Proceso finalizado correctamente.");
 				} else {
