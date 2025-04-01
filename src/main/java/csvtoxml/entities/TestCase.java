@@ -2,10 +2,8 @@ package csvtoxml.entities;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
-import com.thoughtworks.xstream.annotations.XStreamImplicit;
 
 import javax.xml.bind.annotation.XmlElement;
-import java.util.List;
 
 @XStreamAlias("test-case")
 public class TestCase {
@@ -13,13 +11,12 @@ public class TestCase {
     @XStreamAsAttribute
     private String start;
 
-    @XStreamAlias("status")
     @XStreamAsAttribute
     private String status;
 
-    @XStreamAlias("stop")
+    @XStreamAlias("end")
     @XStreamAsAttribute
-    private String stop;
+    private String end;
 
     @XmlElement(name = "funcion")
     private String funcion;
@@ -62,7 +59,7 @@ public class TestCase {
     }
 
     public void setStop(String stop) {
-        this.stop = stop;
+        this.end = stop;
     }
 
     public void setFuncion(String funcion) {

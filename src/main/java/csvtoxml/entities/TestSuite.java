@@ -19,7 +19,7 @@ public class TestSuite {
 
             // Definir correctamente el namespace ns2 dentro de la etiqueta
             String wrappedContent = xmlHeader + "\n" +
-                    "<ns2:test-suite xmlns:ns2=\"urn:model.allure.qatools.yandex.ru\" ns2=\"12345\" start=\"73782437828733\" stop=\"5345345544\">\n" +
+                    "<ns2:test-suite xmlns:ns2=\"urn:model.allure.qatools.yandex.ru\" ns2=\"12345\" start=\"1741374521042\" stop=\"1741374539822\">\n" +
                     "    <name>DWP</name>\n" +
                     "    <title>DWP</title>\n" +
                     xmlBody + "\n" +
