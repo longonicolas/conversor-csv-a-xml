@@ -112,6 +112,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>CsvToXml-0.0.1</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
